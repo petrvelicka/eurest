@@ -7,6 +7,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/petrvelicka/eurest/parser"
@@ -39,7 +40,13 @@ func SendMessage(url string, message *Message) error {
 }
 
 func main() {
-	config := ParseConfig("config.json")
+	config_path := "config.json"
+
+	if len(os.Args) == 2 {
+		config_path = os.Args[1]
+	}
+
+	config := ParseConfig(config_path)
 
 	SendMessage(config.TelegramUrl+config.TelegramToken+"/sendMessage", &Message{ParseMode: "HTML", ChatID: config.TelegramChatId, Text: parser.GetMenuStringHTML(time.Now(), config.Url)})
 }
