@@ -7,12 +7,15 @@ import (
 )
 
 type Config struct {
-	Url            string
-	TelegramToken  string
-	TelegramUrl    string
-	TelegramChatId int64
-	WatcherFile    string
-	Language       string
+	EurestUrl   string
+	Telegram    TelegramConfig
+	WatcherFile string
+	Language    string
+}
+
+type TelegramConfig struct {
+	Token  string
+	ChatId int64
 }
 
 func ParseConfig(fname string) Config {

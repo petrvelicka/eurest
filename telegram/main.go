@@ -44,18 +44,17 @@ func main() {
 
 	if _, err := os.Stat(config.WatcherFile); errors.Is(err, os.ErrNotExist) {
 
-		bot, err := tgbotapi.NewBotAPI(config.TelegramToken)
-		bot.Debug = true
+		bot, err := tgbotapi.NewBotAPI(config.Telegram.Token)
 		if err != nil {
 			log.Panic(err)
 		}
 
-		msgText, err := GetMenuStringHTML(time.Now(), config.Url, config.Language)
+		msgText, err := GetMenuStringHTML(time.Now(), config.EurestUrl, config.Language)
 		if err != nil {
 			log.Panic(err)
 		}
 
-		msg := tgbotapi.NewMessage(config.TelegramChatId, msgText)
+		msg := tgbotapi.NewMessage(config.Telegram.ChatId, msgText)
 		msg.ParseMode = "HTML"
 		response, err := bot.Send(msg)
 		if err != nil {
@@ -63,7 +62,7 @@ func main() {
 		}
 		messageId := response.MessageID
 		unPinAll := tgbotapi.UnpinAllChatMessagesConfig{
-			ChatID: config.TelegramChatId,
+			ChatID: config.Telegram.ChatId,
 		}
 		_, err = bot.Request(unPinAll)
 		if err != nil {
@@ -71,7 +70,7 @@ func main() {
 		}
 
 		pinMessage := tgbotapi.PinChatMessageConfig{
-			ChatID:              config.TelegramChatId,
+			ChatID:              config.Telegram.ChatId,
 			MessageID:           messageId,
 			DisableNotification: true,
 		}
