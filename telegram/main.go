@@ -20,16 +20,18 @@ func GetMenuStringHTML(day time.Time, url string, language string) (string, erro
 	}
 
 	formatString := "%s %s:\n\n<b>%s</b>: %s\n\n<b>%s 1</b>: %s\n\n<b>%s 2</b>: %s\n\n<b>%s 3</b>: %s\n\n<b>%s</b>: %s\n\n%s"
-	resultString := ""
+
+	var lang *Language
 	switch language {
 	case "cs":
-		resultString = fmt.Sprintf(formatString, "Menu pro", menu.Date.Format("02.01.2006"), "Polévka", menu.Soup, "Jídlo", menu.Main[0], "Jídlo", menu.Main[1], "Jídlo", menu.Main[2], "Dezert", menu.Dessert, "Dobrou chuť!")
+		lang = &LanguageCzech
 		break
 	case "en":
 		fallthrough
 	default:
-		resultString = fmt.Sprintf(formatString, "Menu for", menu.Date.Format("2006-01-02"), "Soup", menu.Soup, "Meal", menu.Main[0], "Meal", menu.Main[1], "Meal", menu.Main[2], "Dessert", menu.Dessert, "Enjoy your meal!")
+		lang = &LanguageEnglish
 	}
+	resultString := fmt.Sprintf(formatString, lang.MenuFor, menu.Date.Format(lang.DateFormat), lang.Soup, menu.Soup, lang.Meal, menu.Main[0], lang.Meal, menu.Main[1], lang.Meal, menu.Main[2], lang.Dessert, menu.Dessert, lang.EnjoyYourMeal)
 
 	return resultString, nil
 }
