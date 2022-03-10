@@ -11,6 +11,7 @@ type Config struct {
 	TelegramToken  string
 	TelegramUrl    string
 	TelegramChatId int64
+	WatcherFile    string
 }
 
 func ParseConfig(fname string) Config {

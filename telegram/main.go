@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"log"
@@ -48,5 +49,18 @@ func main() {
 
 	config := ParseConfig(config_path)
 
-	SendMessage(config.TelegramUrl+config.TelegramToken+"/sendMessage", &Message{ParseMode: "HTML", ChatID: config.TelegramChatId, Text: parser.GetMenuStringHTML(time.Now(), config.Url)})
+	if _, err := os.Stat(config.WatcherFile); errors.Is(err, os.ErrNotExist) {
+		url := config.TelegramUrl + config.TelegramToken + "/sendMessage"
+		messageText := parser.GetMenuStringHTML(time.Now(), config.Url)
+		message := Message{ParseMode: "HTML", ChatID: config.TelegramChatId, Text: messageText}
+		err = SendMessage(url, &message)
+		if err != nil {
+			log.Fatal("error sending message")
+		}
+
+		os.Create(config.WatcherFile)
+
+	} else {
+		log.Fatal("already sent menu for today")
+	}
 }
