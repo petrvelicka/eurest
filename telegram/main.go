@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"flag"
 	"fmt"
 	"log"
 	"os"
@@ -34,16 +35,15 @@ func GetMenuStringHTML(day time.Time, url string, language string) (string, erro
 }
 
 func main() {
-	config_path := "config.json"
+	var configPath string
+	var skipDayCheck bool
+	flag.StringVar(&configPath, "config", "config.json", "path to config file")
+	flag.BoolVar(&skipDayCheck, "skipdaycheck", false, "allow sending more than once per day")
+	flag.Parse()
+	log.Printf("Parsing config file %s\n", configPath)
+	config := ParseConfig(configPath)
 
-	if len(os.Args) == 2 {
-		config_path = os.Args[1]
-	}
-
-	config := ParseConfig(config_path)
-
-	if _, err := os.Stat(config.WatcherFile); errors.Is(err, os.ErrNotExist) {
-
+	if _, err := os.Stat(config.WatcherFile); errors.Is(err, os.ErrNotExist) || skipDayCheck {
 		bot, err := tgbotapi.NewBotAPI(config.Telegram.Token)
 		if err != nil {
 			log.Panic(err)
