@@ -51,7 +51,10 @@ func main() {
 
 	if _, err := os.Stat(config.WatcherFile); errors.Is(err, os.ErrNotExist) {
 		url := config.TelegramUrl + config.TelegramToken + "/sendMessage"
-		messageText := parser.GetMenuStringHTML(time.Now(), config.Url)
+		messageText, err := parser.GetMenuStringHTML(time.Now(), config.Url, config.Language)
+		if err != nil {
+			log.Fatal(err)
+		}
 		message := Message{ParseMode: "HTML", ChatID: config.TelegramChatId, Text: messageText}
 		err = SendMessage(url, &message)
 		if err != nil {
