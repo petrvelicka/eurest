@@ -96,24 +96,3 @@ func GetMenuString(day time.Time, url string) string {
 	}
 	return menu.Date.Format("2006-01-02") + ":\n\n**Soup**: " + menu.Soup + "\n\n**Meal 1**: " + menu.Main[0] + "\n\n**Meal 2**: " + menu.Main[1] + "\n\n**Meal 3**: " + menu.Main[2] + "\n\n**Dessert**: " + menu.Dessert
 }
-
-func GetMenuStringHTML(day time.Time, url string, language string) (string, error) {
-	menu, err := GetDay(day, ParseCSV(url))
-	if err != nil {
-		return "", err
-	}
-
-	formatString := "%s %s:\n\n<b>%s</b>: %s\n\n<b>%s 1</b>: %s\n\n<b>%s 2</b>: %s\n\n<b>%s 3</b>: %s\n\n<b>%s</b>: %s\n\n%s"
-	resultString := ""
-	switch language {
-	case "cs":
-		resultString = fmt.Sprintf(formatString, "Menu pro", menu.Date.Format("02.01.2006"), "Polévka", menu.Soup, "Jídlo", menu.Main[0], "Jídlo", menu.Main[1], "Jídlo", menu.Main[2], "Dezert", menu.Dessert, "Dobrou chuť!")
-		break
-	case "en":
-		fallthrough
-	default:
-		resultString = fmt.Sprintf(formatString, "Menu for", menu.Date.Format("2006-01-02"), "Soup", menu.Soup, "Meal", menu.Main[0], "Meal", menu.Main[1], "Meal", menu.Main[2], "Dessert", menu.Dessert, "Enjoy your meal!")
-	}
-
-	return resultString, nil
-}
