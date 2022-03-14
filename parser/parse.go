@@ -69,7 +69,10 @@ func DateEqual(date1, date2 time.Time) bool {
 func GetDay(day time.Time, menu []EurestMenu) (EurestMenu, error) {
 	for _, dayMenu := range menu {
 		if DateEqual(day, dayMenu.Date) {
-			return dayMenu, nil
+			if dayMenu.Soup != "" {
+				return dayMenu, nil
+			}
+			break
 		}
 	}
 	return EurestMenu{}, errors.New("date not found")
