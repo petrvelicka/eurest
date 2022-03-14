@@ -48,12 +48,12 @@ func main() {
 	if _, err := os.Stat(config.WatcherFile); errors.Is(err, os.ErrNotExist) || skipDayCheck {
 		bot, err := tgbotapi.NewBotAPI(config.Telegram.Token)
 		if err != nil {
-			log.Panic(err)
+			log.Fatal(err)
 		}
 
 		msgText, err := GetMenuStringHTML(time.Now(), config.EurestUrl, config.Language)
 		if err != nil {
-			log.Panic(err)
+			log.Fatal(err)
 		}
 
 		msg := tgbotapi.NewMessage(config.Telegram.ChatId, msgText)
